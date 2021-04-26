@@ -1,0 +1,2 @@
+rootProject.name='My Steam'
+include ':app'

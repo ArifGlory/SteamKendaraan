@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/colorBg"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary"
+        android:id="@+id/rlEditProfile">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp"
+            android:layout_centerInParent="true"
+            android:textStyle="bold"
+            android:text="Profil Saya"
+            tools:ignore="MissingPrefix" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/lineBody"
+        android:layout_below="@id/rlEditProfile"
+        >
+        <RelativeLayout
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_marginTop="45dp"
+            android:layout_gravity="center_horizontal">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/ivProfile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_placeholder"
+                app:riv_oval="true" />
+            <ImageView
+                android:id="@+id/ivGallery"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:adjustViewBounds="true"
+                android:padding="8dp"
+                android:background="@drawable/bg_black_corner_10"
+                android:src="@drawable/ic_camera" />
+        </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black2"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="12dp"
+            android:textSize="12sp"
+            android:layout_centerInParent="true"
+            android:text="Nama"
+            tools:ignore="MissingPrefix" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@drawable/bg_editfield"
+            android:id="@+id/edUserName"
+            android:textColor="@color/black2"
+            android:paddingLeft="10dp"
+            android:hint="Nama"
+            android:inputType="text"
+            android:textSize="12sp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="5dp"
+            tools:ignore="MissingPrefix" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black2"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="12dp"
+            android:textSize="12sp"
+            android:layout_centerInParent="true"
+            android:text="Phone"
+            tools:ignore="MissingPrefix" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@drawable/bg_editfield"
+            android:id="@+id/edMobileNumber"
+            android:textColor="@color/black2"
+            android:paddingLeft="10dp"
+            android:hint="Mobile Number"
+            android:textSize="12sp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="5dp"
+            tools:ignore="MissingPrefix" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/lineBody"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+            android:id="@+id/btnEdit"
+            android:layout_marginHorizontal="10dp"
+            style="@style/loginButton"
+            android:layout_weight="1"
+            app:spinning_bar_width="4dp"
+            app:spinning_bar_color="#FFF"
+            android:text="Ubah"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/loginViewsMargin"
+            app:spinning_bar_padding="6dp"
+            app:initialCornerAngle="27dp"/>
+
+        <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+            android:id="@+id/btnLogout"
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="1"
+            style="@style/redButton"
+            app:spinning_bar_width="4dp"
+            app:spinning_bar_color="#FFF"
+            android:text="Logout"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/loginViewsMargin"
+            app:spinning_bar_padding="6dp"
+            app:initialCornerAngle="27dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

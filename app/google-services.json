@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "502020212411",
+    "project_id": "mysteam-86c74",
+    "storage_bucket": "mysteam-86c74.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502020212411:android:740e079e59bd4f241d8b9e",
+        "android_client_info": {
+          "package_name": "com.tapisdev.mysteam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "502020212411-4vs8t329mcmhmoh6tir1bqmoclreg7t8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tapisdev.mysteam",
+            "certificate_hash": "10a6740e6a410954f4d3983063fd02a71175ae62"
+          }
+        },
+        {
+          "client_id": "502020212411-9ulgs8t11pdfhubhpmuag3jajjj1vjq5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtdzULMYfuMb213DbJjTMgk6tzTORNv_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502020212411-9ulgs8t11pdfhubhpmuag3jajjj1vjq5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
