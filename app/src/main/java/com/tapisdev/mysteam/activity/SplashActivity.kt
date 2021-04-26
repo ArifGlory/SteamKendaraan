@@ -7,6 +7,7 @@ import android.util.Log
 import com.tapisdev.cateringtenda.base.BaseActivity
 import com.tapisdev.mysteam.MainActivity
 import com.tapisdev.mysteam.R
+import com.tapisdev.mysteam.activity.admin.HomeAdminActivity
 import com.tapisdev.mysteam.activity.pengguna.HomePenggunaActivity
 import com.tapisdev.mysteam.model.UserPreference
 
@@ -37,9 +38,8 @@ class SplashActivity : BaseActivity() {
             Log.d("userpref"," jenis user : "+mUserPref.getJenisUser())
             if (mUserPref.getJenisUser() != null){
                 if (mUserPref.getJenisUser().equals("admin")){
-                   /* val i = Intent(applicationContext,HomeAdminActivity::class.java)
-                    startActivity(i)*/
-                    showInfoMessage("admin masih dibuat cuy...")
+                    val i = Intent(applicationContext,HomeAdminActivity::class.java)
+                    startActivity(i)
                 }else if(mUserPref.getJenisUser().equals("pengguna")){
                     val i = Intent(applicationContext,HomePenggunaActivity::class.java)
                     startActivity(i)

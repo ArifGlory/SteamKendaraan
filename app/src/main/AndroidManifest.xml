@@ -11,14 +11,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".activity.MaintenanceActivity"
+        <activity android:name=".activity.admin.ListPemilikActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".activity.SplashActivity"
+        <activity android:name=".activity.admin.AddPemilikSteamActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activity.pengguna.ProfilPenggunaActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activity.pengguna.HomePenggunaActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".activity.admin.HomeAdminActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.MaintenanceActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.SplashActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.pengguna.ProfilPenggunaActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.pengguna.HomePenggunaActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar" />
