@@ -102,7 +102,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
-                        android:id="@+id/cirRegisterButton"
+                        android:id="@+id/btnDaftarkan"
                         style="@style/loginButton"
                         app:spinning_bar_width="4dp"
                         app:spinning_bar_color="#FFF"

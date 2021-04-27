@@ -18,7 +18,8 @@ class HomeAdminActivity : BaseActivity() {
             overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
         }
         linePemilik.setOnClickListener {
-
+            startActivity(Intent(this, ListPemilikActivity::class.java))
+            overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
         }
     }
 }

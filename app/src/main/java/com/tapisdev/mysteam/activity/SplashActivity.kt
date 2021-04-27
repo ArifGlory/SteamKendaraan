@@ -46,7 +46,7 @@ class SplashActivity : BaseActivity() {
                 }else if(mUserPref.getJenisUser().equals("steam")){
                     /*val i = Intent(applicationContext,HomePenggunaActivity::class.java)
                     startActivity(i)*/
-                    showInfoMessage("admin masih dibuat cuy...")
+                    showInfoMessage("home steam masih dibuat cuy...")
                 }else{
                     val i = Intent(applicationContext, MainActivity::class.java)
                     startActivity(i)

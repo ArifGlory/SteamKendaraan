@@ -45,7 +45,7 @@
             android:scrollbars="vertical" />
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/animation_view_rekomendasi"
+            android:id="@+id/animation_view_pemilik"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginTop="40dp"
