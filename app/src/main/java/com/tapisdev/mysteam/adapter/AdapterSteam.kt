@@ -18,20 +18,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.tapisdev.mysteam.R
+import com.tapisdev.mysteam.model.Steam
 import com.tapisdev.mysteam.model.UserModel
 import com.tapisdev.mysteam.model.UserPreference
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.row_pemilik_steam.view.*
+import kotlinx.android.synthetic.main.row_steam.view.*
 import java.io.Serializable
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AdapterPemilikSteam(private val list:ArrayList<UserModel>) : RecyclerView.Adapter<AdapterPemilikSteam.Holder>(){
+class AdapterSteam(private val list:ArrayList<Steam>) : RecyclerView.Adapter<AdapterSteam.Holder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        return Holder(LayoutInflater.from(parent.context).inflate(R.layout.row_pemilik_steam,parent,false))
+        return Holder(LayoutInflater.from(parent.context).inflate(R.layout.row_steam,parent,false))
     }
 
     override fun getItemCount(): Int = list?.size
@@ -43,16 +45,15 @@ class AdapterPemilikSteam(private val list:ArrayList<UserModel>) : RecyclerView.
         val nf = NumberFormat.getNumberInstance(Locale.GERMAN)
         val df = nf as DecimalFormat
 
-        holder.view.tvNamaPemilik.text = list?.get(position)?.name
-        holder.view.tvEmail.text =list?.get(position)?.email
-        holder.view.tvPhone.text = list?.get(position)?.phone
+        holder.view.tvNamaSteam.text = list?.get(position)?.nama_steam
+        holder.view.tvAlamat.text =list?.get(position)?.alamat
 
 
-        Glide.with(holder.view.ivFotoPemilik.context)
+        Glide.with(holder.view.ivSteam.context)
             .load(list?.get(position)?.foto)
-            .into(holder.view.ivFotoPemilik)
+            .into(holder.view.ivSteam)
 
-        holder.view.lineSparepart.setOnClickListener {
+        holder.view.lineSteam.setOnClickListener {
             Log.d("adapterIsi",""+list.get(position).toString())
 
 

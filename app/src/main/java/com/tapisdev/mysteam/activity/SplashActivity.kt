@@ -9,6 +9,7 @@ import com.tapisdev.mysteam.MainActivity
 import com.tapisdev.mysteam.R
 import com.tapisdev.mysteam.activity.admin.HomeAdminActivity
 import com.tapisdev.mysteam.activity.pengguna.HomePenggunaActivity
+import com.tapisdev.mysteam.activity.steam.HomeSteamActivity
 import com.tapisdev.mysteam.model.UserPreference
 
 class SplashActivity : BaseActivity() {
@@ -44,9 +45,8 @@ class SplashActivity : BaseActivity() {
                     val i = Intent(applicationContext,HomePenggunaActivity::class.java)
                     startActivity(i)
                 }else if(mUserPref.getJenisUser().equals("steam")){
-                    /*val i = Intent(applicationContext,HomePenggunaActivity::class.java)
-                    startActivity(i)*/
-                    showInfoMessage("home steam masih dibuat cuy...")
+                    val i = Intent(applicationContext,HomeSteamActivity::class.java)
+                    startActivity(i)
                 }else{
                     val i = Intent(applicationContext, MainActivity::class.java)
                     startActivity(i)

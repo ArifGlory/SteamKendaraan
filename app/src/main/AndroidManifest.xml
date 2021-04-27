@@ -17,10 +17,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".activity.admin.ListPemilikActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".activity.admin.AddPemilikSteamActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activity.steam.AddSteamActivity"></activity>
+        <activity
+            android:name=".activity.steam.HomeSteamActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.admin.ListPemilikActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.admin.AddPemilikSteamActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.admin.HomeAdminActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -35,7 +41,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".activity.pengguna.ProfilPenggunaActivity"
@@ -48,9 +53,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
