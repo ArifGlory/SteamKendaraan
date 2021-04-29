@@ -24,6 +24,7 @@ open class BaseActivity : AppCompatActivity() {
     val myDB = FirebaseFirestore.getInstance()
     val userRef = myDB.collection("users")
     val settingsRef = myDB.collection("settings")
+    val steamRef = myDB.collection("steam")
 
 
     override fun setContentView(view: View?) {
@@ -76,6 +77,15 @@ open class BaseActivity : AppCompatActivity() {
         applicationContext?.let { Toasty.warning(it, message, Toast.LENGTH_SHORT, true).show() }
     }
 
+    fun logout(){
+        mUserPref.saveName("")
+        mUserPref.saveAlamat("")
+        mUserPref.saveDeskripsi("")
+        mUserPref.saveEmail("")
+        mUserPref.saveJenisUser("")
+        mUserPref.savePhone("")
+    }
+
     fun convertDate(tanggal : String): String {
         val parser = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         //val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm")
@@ -91,4 +101,6 @@ open class BaseActivity : AppCompatActivity() {
             currentUser = auth.currentUser!!
         }
     }
+
+
 }

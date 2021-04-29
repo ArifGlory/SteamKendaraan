@@ -6,4 +6,5 @@
         <item>Mobil</item>
         <item>Semua</item>
     </string-array>
+    <string name="title_activity_select_lokasi">Map</string>
 </resources>

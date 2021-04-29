@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/confirm_address_map_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activity.MapsActivity" />
+
+    <ImageView
+        android:id="@+id/customMarker"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/marker"/>
+
+    <TextView
+        android:id="@+id/tvSelectLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="10sp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10sp"
+        android:layout_marginBottom="10sp"
+        android:background="@drawable/bg_editfield"
+        android:backgroundTint="@color/colorAccent"
+        android:gravity="center_horizontal"
+        android:padding="10sp"
+        android:textStyle="bold"
+        android:text="Pilih Lokasi ini"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        tools:ignore="MissingPrefix" />
+
+</RelativeLayout>

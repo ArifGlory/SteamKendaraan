@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.tapisdev.cateringtenda.base.BaseActivity
@@ -25,6 +26,7 @@ class AddPemilikSteamActivity : BaseActivity(),PermissionHelper.PermissionListen
 
     var TAG_SIMPAN = "simpanUser"
     lateinit var userModel : UserModel
+    lateinit var password : String
 
     private val PICK_IMAGE_REQUEST = 71
     private var filePath: Uri? = null
@@ -58,6 +60,7 @@ class AddPemilikSteamActivity : BaseActivity(),PermissionHelper.PermissionListen
         var getEmail = editTextEmail.text.toString()
         var getPhone = editTextMobile.text.toString()
         var getPassword = editTextPassword.text.toString()
+        password = getPassword
 
         if (getName.equals("") || getName.length == 0){
             showErrorMessage("Nama Belum diisi")
@@ -131,17 +134,38 @@ class AddPemilikSteamActivity : BaseActivity(),PermissionHelper.PermissionListen
         pDialogLoading.setTitleText("menyimpan data..")
         showInfoMessage("Sedang menyimpan ke database..")
 
-        userRef.document().set(userModel).addOnCompleteListener {
-            task ->
-            dismissLoading()
+        auth.createUserWithEmailAndPassword(userModel.email,password).addOnCompleteListener(this, OnCompleteListener{task ->
             if (task.isSuccessful){
-                showSuccessMessage("Pemilik berhasil didaftarkan")
-                onBackPressed()
+                var userId = auth.currentUser?.uid
+
+                if (userId != null) {
+                    userModel.uId = userId
+                    userRef.document(userId).set(userModel).addOnCompleteListener { task ->
+                        if (task.isSuccessful){
+                            dismissLoading()
+                            showLongSuccessMessage("Pendaftaran Pemilik Steam Berhasil")
+                            onBackPressed()
+                        }else{
+                            dismissLoading()
+                            showLongErrorMessage("Error pendaftaran, coba lagi nanti ")
+                            Log.d(TAG_SIMPAN,"err : "+task.exception)
+                        }
+                    }
+                }else{
+                    showLongErrorMessage("user id tidak di dapatkan")
+                }
             }else{
-                showLongErrorMessage("Penyimpanan data gagal")
-                Log.d(TAG_SIMPAN,"err : "+task.exception)
+                dismissLoading()
+                if(task.exception?.equals("com.google.firebase.auth.FirebaseAuthUserCollisionException: The email address is already in use by another account.")!!){
+                    showLongErrorMessage("Email sudah pernah digunakan ")
+                }else{
+                    showLongErrorMessage("Error pendaftaran, Cek apakah email sudah pernah digunakan / belum dan  coba lagi nanti ")
+                    Log.d(TAG_SIMPAN,"err : "+task.exception)
+                }
+
             }
-        }
+        })
+
     }
 
     private fun launchGallery() {

@@ -168,6 +168,32 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/lineLogout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_height="50dp"
+                        android:layout_above="@+id/tvToko"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/ic_signout" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Logout"
+                        android:textAlignment="center"
+                        android:textColor="@color/grey_800"
+                        android:textSize="14sp"
+                        android:gravity="center_horizontal" />
+
+                </LinearLayout>
+
 
 
 

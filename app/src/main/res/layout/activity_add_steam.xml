@@ -62,7 +62,7 @@
                         android:padding="5dp"
                         android:entries="@array/listKendaraan"
                         android:background="@drawable/et_background1"
-                        android:id="@+id/spJenisUser"></Spinner>
+                        android:id="@+id/spJenisKendaraan"></Spinner>
 
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -70,7 +70,7 @@
                         style="@style/parent"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
-                            android:id="@+id/editTextName"
+                            android:id="@+id/edName"
                             style="@style/modifiedEditText"
                             android:inputType="textPersonName"
                             android:maxLines="1"
@@ -82,7 +82,7 @@
                         style="@style/parent"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
-                            android:id="@+id/editTextEmail"
+                            android:id="@+id/edAlamat"
                             style="@style/modifiedEditText"
                             android:inputType="textMultiLine"
                             android:maxLines="3"
@@ -93,6 +93,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Pilih Lokasi"
+                        android:id="@+id/btnLokasi"
                         android:textSize="10sp"
                         android:drawableLeft="@drawable/ic_place_black_24dp"
                         />
