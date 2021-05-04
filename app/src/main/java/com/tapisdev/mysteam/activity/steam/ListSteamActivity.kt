@@ -39,7 +39,14 @@ class ListSteamActivity : BaseActivity() {
             overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
         }
 
+        updateUI()
         getDataMySteam()
+    }
+
+    fun updateUI(){
+        if (mUserPref.getJenisUser().equals("admin") || mUserPref.getJenisUser().equals("steam")){
+            icAdd.visibility = View.VISIBLE
+        }
     }
 
     fun getDataMySteam(){
@@ -50,9 +57,15 @@ class ListSteamActivity : BaseActivity() {
                 //Log.d(TAG_GET_Sparepart, "Datanya : "+document.data)
                 var steam : Steam = document.toObject(Steam::class.java)
                 steam.id_steam = document.id
-                if (steam.id_pemilik.equals(auth.currentUser?.uid)){
+
+                if (mUserPref.getJenisUser().equals("steam")){
+                    if (steam.id_pemilik.equals(auth.currentUser?.uid)){
+                        listSteam.add(steam)
+                    }
+                }else{
                     listSteam.add(steam)
                 }
+
             }
             if (listSteam.size == 0){
                 animation_view_steam.setAnimation(R.raw.empty_box)

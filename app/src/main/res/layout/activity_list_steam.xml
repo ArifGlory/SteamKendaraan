@@ -28,6 +28,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:visibility="invisible"
             android:src="@drawable/ic_add_black_24dp"
             android:tint="@color/white"
             android:id="@+id/icAdd"
