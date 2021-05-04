@@ -78,6 +78,13 @@ open class BaseActivity : AppCompatActivity() {
         applicationContext?.let { Toasty.warning(it, message, Toast.LENGTH_SHORT, true).show() }
     }
 
+    fun showSweetInfo(message : String){
+        SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
+            .setTitleText("Informasi")
+            .setContentText(message)
+            .show()
+    }
+
     fun logout(){
         mUserPref.saveName("")
         mUserPref.saveAlamat("")

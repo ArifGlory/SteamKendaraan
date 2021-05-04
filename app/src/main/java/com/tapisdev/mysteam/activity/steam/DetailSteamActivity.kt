@@ -45,7 +45,9 @@ class DetailSteamActivity : BaseActivity() {
             onBackPressed()
         }
         cvCekLokasi.setOnClickListener {
-
+            val i = Intent(this,LokasiSteamActivity::class.java)
+            i.putExtra("steam",steam as Serializable)
+            startActivity(i)
         }
         cvUbah.setOnClickListener {
 

@@ -76,6 +76,8 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.3.0'
     //maps
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    //google direction lib
+    implementation 'com.akexorcist:google-direction-library:1.2.1'
     //animated button for login
     implementation 'br.com.simplepass:loading-button-android:1.14.0'
     testImplementation 'junit:junit:4.12'

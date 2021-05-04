@@ -7,4 +7,5 @@
         <item>Semua</item>
     </string-array>
     <string name="title_activity_select_lokasi">Map</string>
+    <string name="title_activity_lokasi_steam">Map</string>
 </resources>
