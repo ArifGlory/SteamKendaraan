@@ -18,23 +18,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.tapisdev.mysteam.R
-import com.tapisdev.mysteam.activity.steam.DetailSteamActivity
-import com.tapisdev.mysteam.model.Steam
+import com.tapisdev.mysteam.model.Fasilitas
 import com.tapisdev.mysteam.model.UserModel
 import com.tapisdev.mysteam.model.UserPreference
 import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.row_pemilik_steam.view.*
-import kotlinx.android.synthetic.main.row_steam.view.*
+import kotlinx.android.synthetic.main.row_fasilitas.view.*
 import java.io.Serializable
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AdapterSteam(private val list:ArrayList<Steam>) : RecyclerView.Adapter<AdapterSteam.Holder>(){
+class AdapterFasilitas(private val list:ArrayList<Fasilitas>) : RecyclerView.Adapter<AdapterFasilitas.Holder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        return Holder(LayoutInflater.from(parent.context).inflate(R.layout.row_steam,parent,false))
+        return Holder(LayoutInflater.from(parent.context).inflate(R.layout.row_fasilitas,parent,false))
     }
 
     override fun getItemCount(): Int = list?.size
@@ -46,19 +44,22 @@ class AdapterSteam(private val list:ArrayList<Steam>) : RecyclerView.Adapter<Ada
         val nf = NumberFormat.getNumberInstance(Locale.GERMAN)
         val df = nf as DecimalFormat
 
-        holder.view.tvNamaSteam.text = list?.get(position)?.nama_steam
-        holder.view.tvAlamat.text =list?.get(position)?.alamat
+        holder.view.tvNamaFasilitas.text = list?.get(position)?.nama_fasilitas
+
+        if (!list?.get(position)?.harga.equals("")){
+            var harga : Int
+            harga = list?.get(position)?.harga.toInt()
+            holder.view.tvHarga.text = "Rp. "+df.format(harga)
+        }else{
+            holder.view.tvHarga.text = "-"
+        }
 
 
-        Glide.with(holder.view.ivSteam.context)
-            .load(list?.get(position)?.foto)
-            .into(holder.view.ivSteam)
 
-        holder.view.lineSteam.setOnClickListener {
+        holder.view.lineFasilitas.setOnClickListener {
             Log.d("adapterIsi",""+list.get(position).toString())
-            val i = Intent(holder.view.lineSteam.context, DetailSteamActivity::class.java)
-            i.putExtra("steam",list.get(position) as Serializable)
-            holder.view.lineSteam.context.startActivity(i)
+
+
         }
 
     }

@@ -8,14 +8,16 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tapisdev.cateringtenda.base.BaseActivity
-import com.tapisdev.mysteam.MainActivity
 import com.tapisdev.mysteam.R
 import com.tapisdev.mysteam.adapter.AdapterSteam
 import com.tapisdev.mysteam.model.Steam
 import com.tapisdev.mysteam.model.UserPreference
 import kotlinx.android.synthetic.main.activity_home_steam.*
+import kotlinx.android.synthetic.main.activity_list_steam.*
+import kotlinx.android.synthetic.main.activity_list_steam.animation_view_steam
+import kotlinx.android.synthetic.main.activity_list_steam.rvSteam
 
-class HomeSteamActivity : BaseActivity() {
+class ListSteamActivity : BaseActivity() {
 
     var TAG_GET_STEAM = "getSteam"
     lateinit var adapter: AdapterSteam
@@ -24,26 +26,16 @@ class HomeSteamActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home_steam)
+        setContentView(R.layout.activity_list_steam)
+
         mUserPref = UserPreference(this)
         adapter = AdapterSteam(listSteam)
         rvSteam.setHasFixedSize(true)
         rvSteam.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
         rvSteam.adapter = adapter
 
-        lineAddSteam.setOnClickListener {
+        icAdd.setOnClickListener {
             startActivity(Intent(this, AddSteamActivity::class.java))
-            overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
-        }
-        lineLogout.setOnClickListener {
-            logout()
-            auth.signOut()
-
-            startActivity(Intent(this, MainActivity::class.java))
-            overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
-        }
-        lineSteamSaya.setOnClickListener {
-            startActivity(Intent(this, ListSteamActivity::class.java))
             overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
         }
 
@@ -51,7 +43,7 @@ class HomeSteamActivity : BaseActivity() {
     }
 
     fun getDataMySteam(){
-        steamRef.limit(5).get().addOnSuccessListener { result ->
+        steamRef.get().addOnSuccessListener { result ->
             listSteam.clear()
             //Log.d(TAG_GET_Sparepart," datanya "+result.documents)
             for (document in result){
@@ -75,5 +67,10 @@ class HomeSteamActivity : BaseActivity() {
             showErrorMessage("terjadi kesalahan : "+exception.message)
             Log.d(TAG_GET_STEAM,"err : "+exception.message)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getDataMySteam()
     }
 }
