@@ -55,31 +55,10 @@ class MainActivity : BaseActivity() {
                 var userId = auth.currentUser?.uid
                 Log.d(TAG_LOGIN,"user ID : "+userId)
 
-                userId?.let {
-                    userRef.document(it).get().addOnCompleteListener{ task ->
-                        dismissLoading()
-                        if (task.isSuccessful){
-                            val document = task.result
-                            if (document != null) {
-                                if (document.exists()) {
-                                    Log.d(TAG_LOGIN, "DocumentSnapshot data: " + document.data)
-                                    //convert doc to object
-                                    var userModel : UserModel = document.toObject(UserModel::class.java)!!
-                                    Log.d(TAG_LOGIN,"usermodel name : "+userModel.name)
-                                    setSession(userModel)
 
-                                    startActivity(Intent(this, SplashActivity::class.java))
-                                    overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
-                                } else {
-                                    Log.d(TAG_LOGIN, "No such document")
-                                }
-                            }
-                        }else{
-                            showErrorMessage("Error saaat mencari di database")
-                            Log.d(TAG_LOGIN,"err : "+task.exception)
-                        }
-                    }
-                }
+                startActivity(Intent(this, SplashActivity::class.java))
+                overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
+
 
             }else{
                 dismissLoading()

@@ -73,7 +73,7 @@ class ProfilPenggunaActivity : BaseActivity(),PermissionHelper.PermissionListene
     }
 
     fun checkValidation(){
-        var getName = edName.text.toString()
+        var getName = edUserName.text.toString()
         var getPhone = edMobileNumber.text.toString()
 
 
@@ -169,9 +169,11 @@ class ProfilPenggunaActivity : BaseActivity(),PermissionHelper.PermissionListene
         if (editMode == 0){
             edUserName.setText(mUserPref.getName())
             edMobileNumber.setText(mUserPref.getPhone())
-            Glide.with(this)
-                .load(mUserPref.getFoto())
-                .into(ivProfile)
+            if (!mUserPref.getFoto().equals("")){
+                Glide.with(this)
+                    .load(mUserPref.getFoto())
+                    .into(ivProfile)
+            }
 
             edUserName.isEnabled = false
             edMobileNumber.isEnabled = false
