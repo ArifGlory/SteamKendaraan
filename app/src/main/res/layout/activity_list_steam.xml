@@ -22,7 +22,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="35dp"
             android:fontFamily="@font/mark_web_w04_black"
-            android:text="List Steam Saya"
+            android:text="List Steam"
             tools:ignore="MissingPrefix" />
 
         <ImageView

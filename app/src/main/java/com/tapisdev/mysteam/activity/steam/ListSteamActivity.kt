@@ -44,7 +44,7 @@ class ListSteamActivity : BaseActivity() {
     }
 
     fun updateUI(){
-        if (mUserPref.getJenisUser().equals("admin") || mUserPref.getJenisUser().equals("steam")){
+        if (mUserPref.getJenisUser().equals("steam")){
             icAdd.visibility = View.VISIBLE
         }
     }
