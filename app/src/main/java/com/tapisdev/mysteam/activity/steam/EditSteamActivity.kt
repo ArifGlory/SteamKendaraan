@@ -12,31 +12,33 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import androidx.core.view.get
-import com.google.android.gms.maps.model.LatLng
+import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.tapisdev.cateringtenda.base.BaseActivity
-import com.tapisdev.mysteam.MainActivity
 import com.tapisdev.mysteam.R
+import com.tapisdev.mysteam.activity.SplashActivity
 import com.tapisdev.mysteam.model.SharedVariable
 import com.tapisdev.mysteam.model.Steam
 import com.tapisdev.mysteam.model.UserPreference
 import com.tapisdev.mysteam.util.PermissionHelper
-import kotlinx.android.synthetic.main.activity_add_pemilik_steam.*
 import kotlinx.android.synthetic.main.activity_add_steam.*
-import kotlinx.android.synthetic.main.activity_add_steam.btnDaftarkan
-import kotlinx.android.synthetic.main.activity_add_steam.ivProfile
+import kotlinx.android.synthetic.main.activity_edit_steam.*
+import kotlinx.android.synthetic.main.activity_edit_steam.edAlamat
+import kotlinx.android.synthetic.main.activity_edit_steam.edName
+import kotlinx.android.synthetic.main.activity_edit_steam.spJenisKendaraan
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.ArrayList
 
-class AddSteamActivity : BaseActivity(),PermissionHelper.PermissionListener {
+class EditSteamActivity : BaseActivity(),PermissionHelper.PermissionListener {
 
-    var TAG_SIMPAN = "simpanSteam"
+    lateinit var i : Intent
+    lateinit var steam : Steam
+
+    var TAG_EDIT = "ubahSteam"
     var TAG_SPINNEr = "spinKendaraan"
     var selectedKendaraan = "none"
-    lateinit var steam : Steam
 
     private val PICK_IMAGE_REQUEST = 71
     private var filePath: Uri? = null
@@ -51,23 +53,24 @@ class AddSteamActivity : BaseActivity(),PermissionHelper.PermissionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_steam)
+        setContentView(R.layout.activity_edit_steam)
         mUserPref = UserPreference(this)
-
+        i = intent
+        steam = i.getSerializableExtra("steam") as Steam
         storageReference = FirebaseStorage.getInstance().reference.child("images")
 
         permissionHelper = PermissionHelper(this)
         permissionHelper.setPermissionListener(this)
 
-        ivProfile.setOnClickListener {
-            launchGallery()
+        btnUpdate.setOnClickListener {
+            checkValidation()
         }
-        btnLokasi.setOnClickListener {
+        btnUbahLokasi.setOnClickListener {
             startActivity(Intent(this, SelectLokasiActivity::class.java))
             overridePendingTransition(R.anim.slide_in_left, android.R.anim.slide_out_right)
         }
-        btnDaftarkan.setOnClickListener {
-            checkValidation()
+        ivGallery.setOnClickListener {
+            launchGallery()
         }
         spJenisKendaraan.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -84,6 +87,8 @@ class AddSteamActivity : BaseActivity(),PermissionHelper.PermissionListener {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         })
+
+        updateUI()
     }
 
     fun checkValidation(){
@@ -100,50 +105,42 @@ class AddSteamActivity : BaseActivity(),PermissionHelper.PermissionListener {
             showErrorMessage("Alamat Belum diisi")
         } else if (lat == 0.0){
             showErrorMessage("Lokasi belum dpilih")
-        }else if (fileUri == null){
-            showErrorMessage("anda belum memilih foto")
         }else if (selectedKendaraan.equals("none") || selectedKendaraan.equals("Pilih Jenis Kendaraan")){
             showErrorMessage("Anda belum memilih jenis kendaraan")
         }
+        else if (fileUri == null){
+            updateDataOnly(getName,getAlamat)
+        }
         else {
-            steam = Steam(getName,
-                getAlamat,
-                "",
-                lat.toString(),
-                lon.toString(),
-                selectedKendaraan,
-                auth.currentUser!!.uid,
-                "")
-            uploadFoto()
+            uploadFoto(getName,getAlamat)
         }
     }
 
-    fun saveSteam(){
-        pDialogLoading.setTitleText("menyimpan data..")
-        showInfoMessage("Sedang menyimpan ke database..")
-
-        steamRef.document().set(steam).addOnCompleteListener {
-            task ->
+    fun updateDataOnly(name : String,alamat : String){
+        showLoading(this)
+        steamRef.document(steam.id_steam).update("nama_steam",name)
+        steamRef.document(steam.id_steam).update("jenis_kendaraan",selectedKendaraan)
+        steamRef.document(steam.id_steam).update("lat",lat.toString())
+        steamRef.document(steam.id_steam).update("lon",lon.toString())
+        steamRef.document(steam.id_steam).update("alamat",alamat).addOnCompleteListener { task ->
+            dismissLoading()
             if (task.isSuccessful){
-                var resetLokasi = LatLng(0.0,0.0)
-                SharedVariable.centerLatLon = resetLokasi
-
-                dismissLoading()
-                showLongSuccessMessage("Tambah Steam Berhasil")
-                onBackPressed()
+                showSuccessMessage("Ubah data berhasil")
+                startActivity(Intent(this, ListSteamActivity::class.java))
+                overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
+                finish()
             }else{
-                dismissLoading()
-                showLongErrorMessage("Error pendaftaran, coba lagi nanti ")
-                Log.d(TAG_SIMPAN,"err : "+task.exception)
+                showLongErrorMessage("terjadi kesalahan : "+task.exception)
+                Log.d(TAG_EDIT,"err : "+task.exception)
             }
         }
     }
 
-    fun uploadFoto(){
+    fun uploadFoto(name : String,alamat : String){
         showLoading(this)
 
         if (fileUri != null){
-            Log.d(TAG_SIMPAN,"uri :"+fileUri.toString())
+            Log.d(TAG_EDIT,"uri :"+fileUri.toString())
 
             val baos = ByteArrayOutputStream()
             fotoBitmap?.compress(Bitmap.CompressFormat.JPEG,50,baos)
@@ -153,7 +150,7 @@ class AddSteamActivity : BaseActivity(),PermissionHelper.PermissionListener {
             val uploadTask = fileReference.putBytes(data)
 
             uploadTask.addOnFailureListener {
-                    exception -> Log.d(TAG_SIMPAN, exception.toString())
+                    exception -> Log.d(TAG_EDIT, exception.toString())
             }.addOnSuccessListener {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 showSuccessMessage("Image Berhasil di upload")
@@ -168,9 +165,24 @@ class AddSteamActivity : BaseActivity(),PermissionHelper.PermissionListener {
 
                         //DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(mAu.getInstance().getCurrentUser().getUid());
                         val url = downloadUri!!.toString()
-                        Log.d(TAG_SIMPAN,"download URL : "+ downloadUri.toString())// This is the one you should store
-                        steam.foto = url
-                        saveSteam()
+                        steamRef.document(steam.id_steam).update("nama_steam",name)
+                        steamRef.document(steam.id_steam).update("jenis_kendaraan",selectedKendaraan)
+                        steamRef.document(steam.id_steam).update("lat",lat.toString())
+                        steamRef.document(steam.id_steam).update("lon",lon.toString())
+                        steamRef.document(steam.id_steam).update("alamat",alamat)
+                        Log.d(TAG_EDIT,"download URL : "+ downloadUri.toString())// This is the one you should store
+                        steamRef.document(steam.id_steam).update("foto",url).addOnCompleteListener { task ->
+                            dismissLoading()
+                            if (task.isSuccessful){
+                                showSuccessMessage("Ubah data berhasil")
+                                startActivity(Intent(this, ListSteamActivity::class.java))
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
+                                finish()
+                            }else{
+                                showLongErrorMessage("terjadi kesalahan : "+task.exception)
+                                Log.d(TAG_EDIT,"err : "+task.exception)
+                            }
+                        }
                     } else {
                         dismissLoading()
                         showErrorMessage("Terjadi kesalahan, coba lagi nanti")
@@ -188,11 +200,26 @@ class AddSteamActivity : BaseActivity(),PermissionHelper.PermissionListener {
         }
     }
 
-    private fun launchGallery() {
-        var listPermissions: MutableList<String> = ArrayList()
-        listPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        listPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
-        permissionHelper.checkAndRequestPermissions(listPermissions)
+    fun updateUI(){
+        edName.setText(steam.nama_steam)
+        edAlamat.setText(steam.alamat)
+        Glide.with(this)
+            .load(steam.foto)
+            .into(ivSteam)
+
+        selectedKendaraan = steam.jenis_kendaraan
+        if (steam.jenis_kendaraan.equals("Motor")){
+            spJenisKendaraan.setSelection(1)
+        }else if (steam.jenis_kendaraan.equals("Mobil")){
+            spJenisKendaraan.setSelection(2)
+        }else if (steam.jenis_kendaraan.equals("Semua")){
+            spJenisKendaraan.setSelection(3)
+        }else{
+            spJenisKendaraan.setSelection(0)
+        }
+
+        lat = steam.lat.toDouble()
+        lon = steam.lon.toDouble()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -207,11 +234,18 @@ class AddSteamActivity : BaseActivity(),PermissionHelper.PermissionListener {
             try {
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filePath)
                 fotoBitmap = bitmap
-                ivProfile.setImageBitmap(bitmap)
+                ivSteam.setImageBitmap(bitmap)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun launchGallery() {
+        var listPermissions: MutableList<String> = ArrayList()
+        listPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        listPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        permissionHelper.checkAndRequestPermissions(listPermissions)
     }
 
     override fun onPermissionCheckDone() {
@@ -227,9 +261,9 @@ class AddSteamActivity : BaseActivity(),PermissionHelper.PermissionListener {
             lat = SharedVariable.centerLatLon.latitude
             lon = SharedVariable.centerLatLon.longitude
 
-            val img: Drawable = btnLokasi.context.resources.getDrawable(R.drawable.ic_check_black_24dp)
-            btnLokasi.setText("Lokasi Telah dipilih")
-            btnLokasi.setCompoundDrawables(img,null,null,null)
+            val img: Drawable = btnUbahLokasi.context.resources.getDrawable(R.drawable.ic_check_black_24dp)
+            btnUbahLokasi.setText("Lokasi Telah dipilih")
+            btnUbahLokasi.setCompoundDrawables(img,null,null,null)
         }
     }
 }

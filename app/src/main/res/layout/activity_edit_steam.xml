@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/register_bk_color"
+    android:focusableInTouchMode="true"
+    android:gravity="center"
+    android:layout_gravity="center">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:layout_marginTop="30dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/whiteTextColor"
+                app:cardCornerRadius="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="13sp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_centerInParent="true"
+                        android:textStyle="bold"
+                        android:text="Ubah Data Steam"
+                        tools:ignore="MissingPrefix" />
+
+                    <RelativeLayout
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_marginTop="45dp"
+                        android:layout_gravity="center_horizontal">
+
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/ivSteam"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_placeholder"
+                            app:riv_oval="true" />
+                        <ImageView
+                            android:id="@+id/ivGallery"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentBottom="true"
+                            android:adjustViewBounds="true"
+                            android:padding="8dp"
+                            android:background="@drawable/bg_black_corner_10"
+                            android:src="@drawable/ic_camera" />
+                    </RelativeLayout>
+
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="20dp"
+                        android:popupBackground="@color/white"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:entries="@array/listKendaraan"
+                        android:background="@drawable/et_background1"
+                        android:id="@+id/spJenisKendaraan"></Spinner>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputName"
+                        style="@style/parent"
+                        android:layout_marginTop="@dimen/loginViewsMargin">
+                        <EditText
+                            android:id="@+id/edName"
+                            style="@style/modifiedEditText"
+                            android:inputType="textPersonName"
+                            android:maxLines="1"
+                            android:hint="Nama Steam"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputEmail"
+                        style="@style/parent"
+                        android:layout_marginTop="@dimen/loginViewsMargin">
+                        <EditText
+                            android:id="@+id/edAlamat"
+                            style="@style/modifiedEditText"
+                            android:inputType="textMultiLine"
+                            android:maxLines="3"
+                            android:hint="Alamat"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ubah Lokasi"
+                        android:id="@+id/btnUbahLokasi"
+                        android:textSize="10sp"
+                        android:drawableLeft="@drawable/ic_place_black_24dp"
+                        />
+
+
+
+                    <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+                        android:id="@+id/btnUpdate"
+                        style="@style/loginButton"
+                        app:spinning_bar_width="4dp"
+                        app:spinning_bar_color="#FFF"
+                        android:text="Simpan Perubahan"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/loginViewsMargin"
+                        app:initialCornerAngle="27dp"
+                        app:spinning_bar_padding="6dp"/>
+
+
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+
+        </LinearLayout>
+    </ScrollView>
+    <View
+        android:layout_marginTop="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="11dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/ic_side_bg"/>
+
+</RelativeLayout>

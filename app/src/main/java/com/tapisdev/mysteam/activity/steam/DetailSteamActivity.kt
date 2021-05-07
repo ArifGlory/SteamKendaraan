@@ -51,7 +51,9 @@ class DetailSteamActivity : BaseActivity() {
             startActivity(i)
         }
         cvUbah.setOnClickListener {
-
+            val i = Intent(this,EditSteamActivity::class.java)
+            i.putExtra("steam",steam as Serializable)
+            startActivity(i)
         }
         cvHapus.setOnClickListener {
             SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
@@ -121,5 +123,10 @@ class DetailSteamActivity : BaseActivity() {
             showErrorMessage("terjadi kesalahan : "+exception.message)
             Log.d(TAG_GET_Fasilitas,"err : "+exception.message)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getDataFasilitas()
     }
 }

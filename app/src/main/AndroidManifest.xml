@@ -21,7 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".activity.steam.ProfilPemilikSteamActivity"></activity>
+        <activity android:name=".activity.steam.EditSteamActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".activity.steam.ProfilPemilikSteamActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
