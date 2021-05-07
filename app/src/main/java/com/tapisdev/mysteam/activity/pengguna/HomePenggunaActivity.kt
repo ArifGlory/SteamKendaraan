@@ -42,6 +42,10 @@ class HomePenggunaActivity : BaseActivity() {
             startActivity(Intent(this, ListSteamActivity::class.java))
             overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
         }
+        linePersebaran.setOnClickListener {
+            startActivity(Intent(this, PersebaranActivity::class.java))
+            overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
+        }
 
         getDataSteam()
     }

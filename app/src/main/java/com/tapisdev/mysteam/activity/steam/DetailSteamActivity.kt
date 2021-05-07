@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.tapisdev.cateringtenda.base.BaseActivity
 import com.tapisdev.mysteam.R
@@ -53,7 +54,30 @@ class DetailSteamActivity : BaseActivity() {
 
         }
         cvHapus.setOnClickListener {
+            SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Anda yakin menghapus ini ?")
+                .setContentText("Data yang sudah dihapus tidak bisa dikembalikan")
+                .setConfirmText("Ya")
+                .setConfirmClickListener { sDialog ->
+                    sDialog.dismissWithAnimation()
+                    showLoading(this)
+                    steamRef.document(steam.id_steam).delete().addOnSuccessListener {
+                        dismissLoading()
+                        showSuccessMessage("Data berhasil dihapus")
+                        onBackPressed()
+                        Log.d("deleteDoc", "DocumentSnapshot successfully deleted!")
+                    }.addOnFailureListener {
+                            e ->
+                        dismissLoading()
+                        showErrorMessage("terjadi kesalahan "+e)
+                        Log.w("deleteDoc", "Error deleting document", e)
+                    }
 
+                }
+                .setCancelButton(
+                    "Tidak"
+                ) { sDialog -> sDialog.dismissWithAnimation() }
+                .show()
         }
         ivAddFasilitas.setOnClickListener {
             val i = Intent(this,AddFasilitasActivity::class.java)

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tapisdev.cateringtenda.base.BaseActivity
 import com.tapisdev.mysteam.MainActivity
 import com.tapisdev.mysteam.R
+import com.tapisdev.mysteam.activity.pengguna.ProfilPenggunaActivity
 import com.tapisdev.mysteam.adapter.AdapterSteam
 import com.tapisdev.mysteam.model.Steam
 import com.tapisdev.mysteam.model.UserPreference
@@ -44,6 +45,10 @@ class HomeSteamActivity : BaseActivity() {
         }
         lineSteamSaya.setOnClickListener {
             startActivity(Intent(this, ListSteamActivity::class.java))
+            overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
+        }
+        lineProfil.setOnClickListener {
+            startActivity(Intent(this, ProfilPenggunaActivity::class.java))
             overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
         }
 
