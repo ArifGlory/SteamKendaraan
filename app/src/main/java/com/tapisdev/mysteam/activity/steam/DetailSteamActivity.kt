@@ -129,4 +129,8 @@ class DetailSteamActivity : BaseActivity() {
         super.onResume()
         getDataFasilitas()
     }
+
+    fun refreshList(){
+        getDataFasilitas()
+    }
 }
