@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/register_bk_color"
+    android:background="@drawable/bg_2"
     android:focusableInTouchMode="true"
     android:gravity="center"
     android:layout_gravity="center">
@@ -33,7 +33,7 @@
                 <ImageView
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:src="@drawable/car_wash"
+                    android:src="@drawable/logo_app"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"/>
             </RelativeLayout>

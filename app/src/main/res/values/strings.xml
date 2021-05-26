@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Steam</string>
+    <string name="app_name">Steam Ku</string>
     <string-array name="listKendaraan">
         <item>Pilih Jenis Kendaraan</item>
         <item>Motor</item>
