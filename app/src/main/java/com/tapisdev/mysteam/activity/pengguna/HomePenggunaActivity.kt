@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,6 +47,23 @@ class HomePenggunaActivity : BaseActivity() {
             startActivity(Intent(this, PersebaranActivity::class.java))
             overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
         }
+        edSearch.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                var keyword = edSearch.text.toString()
+                if (keyword.equals("") || keyword.length == 0){
+                    showErrorMessage("Anda belum menuliskan kata kunci pencarian")
+                }else{
+                    val i = Intent(this, ResultActivity::class.java)
+                    i.putExtra("jenis","search")
+                    //i.putExtra("key",keyword)
+                    i.putExtra("value",keyword)
+                    startActivity(i)
+                }
+
+                return@OnKeyListener true
+            }
+            false
+        })
 
         getDataSteam()
     }

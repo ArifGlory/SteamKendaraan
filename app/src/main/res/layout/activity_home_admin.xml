@@ -155,7 +155,7 @@
                         android:layout_height="50dp"
                         android:layout_above="@+id/tvToko"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/pemilik_carwash" />
+                        android:src="@drawable/add_user" />
 
                     <TextView
                         android:layout_width="match_parent"
