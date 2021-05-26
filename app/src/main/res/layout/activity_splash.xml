@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/car_wash"
+        android:src="@drawable/logo_app"
         android:id="@+id/ivLogo"
         android:layout_centerInParent="true"/>
 

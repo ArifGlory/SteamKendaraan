@@ -1,6 +1,7 @@
 package com.tapisdev.mysteam.activity.pengguna
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -17,11 +18,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.tapisdev.cateringtenda.base.BaseActivity
 import com.tapisdev.mysteam.R
+import com.tapisdev.mysteam.activity.steam.DetailSteamActivity
 import com.tapisdev.mysteam.adapter.AdapterSteam
 import com.tapisdev.mysteam.model.Steam
 import com.tapisdev.mysteam.model.UserPreference
 import com.tapisdev.mysteam.util.PermissionHelper
 import kotlinx.android.synthetic.main.activity_list_steam.*
+import java.io.Serializable
 
 class PersebaranActivity : BaseActivity(), OnMapReadyCallback,PermissionHelper.PermissionListener {
 
@@ -69,6 +72,16 @@ class PersebaranActivity : BaseActivity(), OnMapReadyCallback,PermissionHelper.P
             Log.d("permission","not granted")
         }else{
             mMap.isMyLocationEnabled = true
+        }
+
+        mMap.setOnInfoWindowClickListener {
+            Log.d("infoWindow"," ID : "+it.id)
+            var idSteam = it.id.substringAfter("m")
+            var steam = listSteam.get(idSteam.toInt())
+
+            val i = Intent(this, DetailSteamActivity::class.java)
+            i.putExtra("steam",listSteam.get(idSteam.toInt()) as Serializable)
+            startActivity(i)
         }
     }
 
