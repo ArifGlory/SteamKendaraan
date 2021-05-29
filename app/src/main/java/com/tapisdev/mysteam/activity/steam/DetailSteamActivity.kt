@@ -86,6 +86,9 @@ class DetailSteamActivity : BaseActivity() {
             i.putExtra("steam",steam as Serializable)
             startActivity(i)
         }
+        cvRating.setOnClickListener {
+
+        }
 
         updateUI()
         getDataFasilitas()
