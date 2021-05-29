@@ -26,6 +26,7 @@ open class BaseActivity : AppCompatActivity() {
     val settingsRef = myDB.collection("settings")
     val steamRef = myDB.collection("steam")
     val fasilitasRef = myDB.collection("fasilitas")
+    val ratingRef = myDB.collection("rating")
 
 
     override fun setContentView(view: View?) {

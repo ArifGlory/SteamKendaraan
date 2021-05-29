@@ -120,7 +120,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Semua Terdaftar"
+                        android:text="Steam Terdaftar"
                         android:textAlignment="center"
                         android:textColor="@color/grey_800"
                         android:textSize="14sp"
