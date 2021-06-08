@@ -6,14 +6,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Parcelize
-data class Steam(
+data class Booking(
+    var tanggal : String = "",
+    var jam : String = "",
+    var nama_user : String = "",
+    var foto_user : String = "",
     var nama_steam : String = "",
-    var alamat : String = "",
-    var foto : String = "",
-    var lat : String = "",
-    var lon : String = "",
-    var jenis_kendaraan : String = "",
+    var id_user : String = "",
     var id_pemilik : String = "",
     var id_steam : String = "",
-    var status : String = ""
+    var id_booking : String = ""
 ) : Parcelable,java.io.Serializable

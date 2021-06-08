@@ -80,7 +80,7 @@ dependencies {
     implementation 'com.akexorcist:google-direction-library:1.2.1'
     //animated button for login
     implementation 'br.com.simplepass:loading-button-android:1.14.0'
-    //rating
+    //ratingg
     implementation 'com.stepstone.apprating:app-rating:2.3.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

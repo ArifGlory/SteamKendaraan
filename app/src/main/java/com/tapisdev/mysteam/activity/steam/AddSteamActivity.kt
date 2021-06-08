@@ -113,7 +113,8 @@ class AddSteamActivity : BaseActivity(),PermissionHelper.PermissionListener {
                 lon.toString(),
                 selectedKendaraan,
                 auth.currentUser!!.uid,
-                "")
+                "",
+                "open")
             uploadFoto()
         }
     }

@@ -13,6 +13,7 @@ import com.stepstone.apprating.AppRatingDialog
 import com.stepstone.apprating.listener.RatingDialogListener
 import com.tapisdev.cateringtenda.base.BaseActivity
 import com.tapisdev.mysteam.R
+import com.tapisdev.mysteam.activity.pengguna.BookingActivity
 import com.tapisdev.mysteam.adapter.AdapterFasilitas
 import com.tapisdev.mysteam.model.Fasilitas
 import com.tapisdev.mysteam.model.Rating
@@ -101,6 +102,16 @@ class DetailSteamActivity : BaseActivity(),RatingDialogListener {
             }
 
         }
+        cvBooking.setOnClickListener {
+            if (mUserPref.getJenisUser().equals("pengguna")){
+                val i = Intent(this,BookingActivity::class.java)
+                i.putExtra("steam",steam as Serializable)
+                startActivity(i)
+            }else{
+                showInfoMessage("Fitur ini hanya untuk pengguna biasa")
+            }
+
+        }
 
         updateUI()
         getDataFasilitas()
@@ -159,6 +170,7 @@ class DetailSteamActivity : BaseActivity(),RatingDialogListener {
         tvNamaSteam.setText(steam.nama_steam)
         tvAlamat.setText(steam.alamat)
         tvJenisKendaraan.setText(steam.jenis_kendaraan)
+        tvStatus.setText(steam.status)
         Glide.with(this)
             .load(steam.foto)
             .into(ivSteam)
