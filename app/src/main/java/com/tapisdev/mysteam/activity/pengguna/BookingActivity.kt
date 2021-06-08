@@ -2,28 +2,28 @@ package com.tapisdev.mysteam.activity.pengguna
 
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import cn.pedant.SweetAlert.SweetAlertDialog
-import com.google.firebase.firestore.Query
 import com.tapisdev.cateringtenda.base.BaseActivity
 import com.tapisdev.mysteam.R
 import com.tapisdev.mysteam.model.Booking
 import com.tapisdev.mysteam.model.Steam
 import com.tapisdev.mysteam.model.UserPreference
 import kotlinx.android.synthetic.main.activity_booking.*
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class BookingActivity : BaseActivity() {
 
     lateinit var i : Intent
     lateinit var steam : Steam
     val sdf = SimpleDateFormat("yyyy-MM-dd")
+    val sdfTime = SimpleDateFormat("yyyy-MM-dd HH:mm")
     val currentDate = sdf.format(Date())
     var TAG_GET_BOOKING = "getBooking"
     var TAG_SIMPAN = "saveBooking"
@@ -51,7 +51,9 @@ class BookingActivity : BaseActivity() {
                     .setConfirmText("Ya")
                     .setConfirmClickListener { sDialog ->
                         sDialog.dismissWithAnimation()
-                        deleteBooking()
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            deleteBooking()
+                        }
                     }
                     .setCancelButton(
                         "Tidak"
@@ -162,11 +164,39 @@ class BookingActivity : BaseActivity() {
             tvStatusBookingUser.setText("Anda memiliki booking hari ini pada jam "+myBooking.jam+" \n di "+myBooking.nama_steam+". \n Pastikan datang tepat waktu, jika melebihi 30menit dari waktu booking, maka booking steam anda akan hangus.")
             btnBook.setText("Hapus Booking Aktif")
             timePicker.visibility = View.INVISIBLE
+            checkDifferenceTime()
+
         }else{
             tvStatusBookingUser.setText("Anda belum memiliki booking hari ini, silahkan melakukan proses Booking")
             btnBook.setText("Booking")
             timePicker.visibility = View.VISIBLE
         }
 
+    }
+
+    fun checkDifferenceTime(){
+        var dateBooking = currentDate+" "+myBooking.jam
+        var dateNow = ""+sdfTime.format(Date())
+
+        var dtNow = sdfTime.parse(dateNow)
+        var dtBooking = sdfTime.parse(dateBooking)
+
+
+        val timeFormat: DateFormat = SimpleDateFormat("HH:mm")
+        var cal = Calendar.getInstance()
+        cal.time = dtBooking
+        cal.add(Calendar.MINUTE,30)
+        dtBooking = cal.time
+
+
+        var millis2 = dtBooking.time - dtNow.time
+        val jam = (millis2 / (1000 * 60 * 60)).toInt()
+        val menit = (millis2 / (1000 * 60) % 60).toInt()
+        Log.d("checkDiff"," perbedaaan jam:"+jam+ " & menit : "+menit)
+
+        if (menit < 30){
+            showInfoMessage("Masa Booking telah habis, booking anda akan dihapus secara otomatis")
+            deleteBooking()
+        }
     }
 }
