@@ -12,6 +12,7 @@ data class Booking(
     var nama_user : String = "",
     var foto_user : String = "",
     var nama_steam : String = "",
+    var status_booking : String = "",
     var id_user : String = "",
     var id_pemilik : String = "",
     var id_steam : String = "",

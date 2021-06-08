@@ -44,21 +44,54 @@ class BookingActivity : BaseActivity() {
             onBackPressed()
         }
         btnBook.setOnClickListener {
-            SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Yakin waktu sudah sesuai ?")
-                .setContentText("Pastikan kembali waktu steam anda")
-                .setConfirmText("Ya")
-                .setConfirmClickListener { sDialog ->
-                    sDialog.dismissWithAnimation()
-                    saveBooking()
-                }
-                .setCancelButton(
-                    "Tidak"
-                ) { sDialog -> sDialog.dismissWithAnimation() }
-                .show()
+            if (isBooking){
+                SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Yakin Hapus Booking Aktif ?")
+                    .setContentText("hapus booking tidak bisa dikembalikan")
+                    .setConfirmText("Ya")
+                    .setConfirmClickListener { sDialog ->
+                        sDialog.dismissWithAnimation()
+                        deleteBooking()
+                    }
+                    .setCancelButton(
+                        "Tidak"
+                    ) { sDialog -> sDialog.dismissWithAnimation() }
+                    .show()
+            }else{
+                SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Yakin waktu sudah sesuai ?")
+                    .setContentText("Pastikan kembali waktu steam anda")
+                    .setConfirmText("Ya")
+                    .setConfirmClickListener { sDialog ->
+                        sDialog.dismissWithAnimation()
+                        saveBooking()
+                    }
+                    .setCancelButton(
+                        "Tidak"
+                    ) { sDialog -> sDialog.dismissWithAnimation() }
+                    .show()
+            }
+
         }
 
         cekMyBooking()
+    }
+
+    fun deleteBooking(){
+        showLoading(this)
+        bookingRef.document(myBooking.id_booking).delete().addOnSuccessListener {
+            dismissLoading()
+            showSuccessMessage("Booking Aktif Berhasil Dihapus")
+            isBooking = false
+            updateUI()
+
+            Log.d("deleteDoc", "DocumentSnapshot successfully deleted!")
+        }.addOnFailureListener {
+                e ->
+            dismissLoading()
+            showErrorMessage("terjadi kesalahan "+e)
+            Log.w("deleteDoc", "Error deleting document", e)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -72,6 +105,7 @@ class BookingActivity : BaseActivity() {
             mUserPref.getName()!!,
             mUserPref.getFoto()!!,
             steam.nama_steam,
+            "waiting",
             auth.currentUser!!.uid!!,
             steam.id_pemilik,
             steam.id_steam,

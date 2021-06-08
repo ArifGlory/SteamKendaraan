@@ -112,6 +112,11 @@ class DetailSteamActivity : BaseActivity(),RatingDialogListener {
             }
 
         }
+        cvListBooking.setOnClickListener {
+            val i = Intent(this,ListBookingActivity::class.java)
+            i.putExtra("steam",steam as Serializable)
+            startActivity(i)
+        }
 
         updateUI()
         getDataFasilitas()
@@ -163,8 +168,10 @@ class DetailSteamActivity : BaseActivity(),RatingDialogListener {
         }
         if (mUserPref.getJenisUser().equals("pengguna")){
             cvRating.visibility = View.VISIBLE
+            cvBooking.visibility = View.VISIBLE
         }else{
             cvRating.visibility = View.GONE
+            cvBooking.visibility = View.GONE
         }
 
         tvNamaSteam.setText(steam.nama_steam)
