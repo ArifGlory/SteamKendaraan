@@ -159,7 +159,7 @@ class BookingActivity : BaseActivity() {
 
     fun updateUI(){
         if (isBooking){
-            tvStatusBookingUser.setText("Anda memiliki booking hari ini pada jam "+myBooking.jam+" \n di "+myBooking.nama_steam)
+            tvStatusBookingUser.setText("Anda memiliki booking hari ini pada jam "+myBooking.jam+" \n di "+myBooking.nama_steam+". \n Pastikan datang tepat waktu, jika melebihi 30menit dari waktu booking, maka booking steam anda akan hangus.")
             btnBook.setText("Hapus Booking Aktif")
             timePicker.visibility = View.INVISIBLE
         }else{
