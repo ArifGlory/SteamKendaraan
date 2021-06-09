@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.google.firebase.firestore.DocumentSnapshot
 import com.tapisdev.cateringtenda.base.BaseActivity
 import com.tapisdev.mysteam.R
 import com.tapisdev.mysteam.model.Booking
@@ -27,6 +28,7 @@ class BookingActivity : BaseActivity() {
     val currentDate = sdf.format(Date())
     var TAG_GET_BOOKING = "getBooking"
     var TAG_SIMPAN = "saveBooking"
+    var id_steam = ""
     var isBooking = false
     lateinit var myBooking : Booking
 
@@ -37,7 +39,9 @@ class BookingActivity : BaseActivity() {
         mUserPref = UserPreference(this)
 
         i = intent
-        steam = i.getSerializableExtra("steam") as Steam
+       // steam = i.getSerializableExtra("steam") as Steam
+        id_steam = i.getStringExtra("id_steam").toString()
+        Log.d("id_steam",id_steam)
         timePicker.setIs24HourView(true)
 
         icBack.setOnClickListener {
@@ -76,7 +80,29 @@ class BookingActivity : BaseActivity() {
 
         }
 
+        getDetailSteam()
         cekMyBooking()
+    }
+
+    fun getDetailSteam(){
+        //showLoading(this)
+        steamRef.document(id_steam).get().addOnSuccessListener {
+            document ->
+           // dismissLoading()
+            if (document != null){
+                steam = document.toObject(Steam::class.java)!!
+                steam.id_steam = id_steam
+                Log.d("detailSteam",steam.toString())
+            }else{
+                showErrorMessage("Steam tidak ditemukan")
+                onBackPressed()
+            }
+
+        }.addOnFailureListener {
+            //dismissLoading()
+            showErrorMessage("terjadi kesalahan coba lagi nanti")
+            Log.d("detailSteam",it.toString())
+        }
     }
 
     fun deleteBooking(){
@@ -110,7 +136,7 @@ class BookingActivity : BaseActivity() {
             "waiting",
             auth.currentUser!!.uid!!,
             steam.id_pemilik,
-            steam.id_steam,
+            id_steam,
             ""
         )
 
@@ -188,13 +214,12 @@ class BookingActivity : BaseActivity() {
         cal.add(Calendar.MINUTE,30)
         dtBooking = cal.time
 
-
         var millis2 = dtBooking.time - dtNow.time
         val jam = (millis2 / (1000 * 60 * 60)).toInt()
         val menit = (millis2 / (1000 * 60) % 60).toInt()
         Log.d("checkDiff"," perbedaaan jam:"+jam+ " & menit : "+menit)
 
-        if (menit < 30){
+        if (jam == 0 && menit < 1){
             showInfoMessage("Masa Booking telah habis, booking anda akan dihapus secara otomatis")
             deleteBooking()
         }

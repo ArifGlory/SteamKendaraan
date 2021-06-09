@@ -64,6 +64,10 @@ class HomePenggunaActivity : BaseActivity() {
             }
             false
         })
+        lineBooking.setOnClickListener {
+            startActivity(Intent(this, ListBookingPenggunaActivity::class.java))
+            overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
+        }
 
         getDataSteam()
     }

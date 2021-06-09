@@ -105,7 +105,7 @@ class DetailSteamActivity : BaseActivity(),RatingDialogListener {
         cvBooking.setOnClickListener {
             if (mUserPref.getJenisUser().equals("pengguna")){
                 val i = Intent(this,BookingActivity::class.java)
-                i.putExtra("steam",steam as Serializable)
+                i.putExtra("id_steam",steam.id_steam)
                 startActivity(i)
             }else{
                 showInfoMessage("Fitur ini hanya untuk pengguna biasa")

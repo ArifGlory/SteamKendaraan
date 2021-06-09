@@ -21,8 +21,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".activity.steam.ListBookingActivity"
+        <activity android:name=".activity.pengguna.ListBookingPenggunaActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.steam.ListBookingActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.pengguna.BookingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
