@@ -12,14 +12,23 @@ import com.tapisdev.mysteam.MainActivity
 import com.tapisdev.mysteam.R
 import com.tapisdev.mysteam.activity.pengguna.ProfilPenggunaActivity
 import com.tapisdev.mysteam.adapter.AdapterSteam
+import com.tapisdev.mysteam.model.Booking
 import com.tapisdev.mysteam.model.Steam
 import com.tapisdev.mysteam.model.UserPreference
 import kotlinx.android.synthetic.main.activity_home_steam.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class HomeSteamActivity : BaseActivity() {
 
     var TAG_GET_STEAM = "getSteam"
+    var TAG_GET = "getBooking"
     lateinit var adapter: AdapterSteam
+    val sdf = SimpleDateFormat("yyyy-MM-dd")
+    val sdfTime = SimpleDateFormat("yyyy-MM-dd HH:mm")
+    val currentDate = sdf.format(Date())
+    var listBooking = ArrayList<Booking>()
 
     var listSteam = ArrayList<Steam>()
 
@@ -53,6 +62,43 @@ class HomeSteamActivity : BaseActivity() {
         }
 
         getDataMySteam()
+        getDataBooking()
+    }
+
+    fun getDataBooking(){
+        /*val sdf = SimpleDateFormat("yyyy-MM-dd")
+        val currentDate = sdf.format(Date())*/
+        Log.d(TAG_GET,"tanggla "+currentDate.toString())
+        pgNotif.visibility = View.VISIBLE
+        bookingRef.whereEqualTo("tanggal",currentDate.toString())
+            .get().addOnSuccessListener { result ->
+                listBooking.clear()
+                //Log.d(TAG_GET_Sparepart," datanya "+result.documents)
+                pgNotif.visibility = View.INVISIBLE
+                for (document in result){
+                    //Log.d(TAG_GET_Sparepart, "Datanya : "+document.data)
+                    var booking : Booking = document.toObject(Booking::class.java)
+                    booking.id_booking = document.id
+                    //sa;ah disni
+                    if (booking.id_pemilik.equals(auth.currentUser?.uid)){
+                        listBooking.add(booking)
+                    }
+                    if(listBooking.size > 0){
+                        showInfoMessage("Ada Booking Baru !")
+                        tvNotif.visibility = View.VISIBLE
+                        tvNotif.setText("Ada "+listBooking.size+" booking baru, silahkan cek ke Menu Steam anda")
+                    }else{
+                        tvNotif.visibility = View.VISIBLE
+                        tvNotif.setText("Belum ada booking baru untuk saat ini")
+                    }
+
+                }
+
+            }.addOnFailureListener { exception ->
+                pgNotif.visibility = View.INVISIBLE
+                showErrorMessage("terjadi kesalahan : "+exception.message)
+                Log.d(TAG_GET,"err : "+exception.message)
+            }
     }
 
     fun getDataMySteam(){
