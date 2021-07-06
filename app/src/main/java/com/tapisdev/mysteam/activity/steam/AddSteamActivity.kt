@@ -5,31 +5,28 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import androidx.core.view.get
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.tapisdev.cateringtenda.base.BaseActivity
-import com.tapisdev.mysteam.MainActivity
 import com.tapisdev.mysteam.R
 import com.tapisdev.mysteam.model.SharedVariable
 import com.tapisdev.mysteam.model.Steam
 import com.tapisdev.mysteam.model.UserPreference
 import com.tapisdev.mysteam.util.PermissionHelper
-import kotlinx.android.synthetic.main.activity_add_pemilik_steam.*
 import kotlinx.android.synthetic.main.activity_add_steam.*
-import kotlinx.android.synthetic.main.activity_add_steam.btnDaftarkan
-import kotlinx.android.synthetic.main.activity_add_steam.ivProfile
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.util.ArrayList
+import java.util.*
+
 
 class AddSteamActivity : BaseActivity(),PermissionHelper.PermissionListener {
 
@@ -231,6 +228,34 @@ class AddSteamActivity : BaseActivity(),PermissionHelper.PermissionListener {
             val img: Drawable = btnLokasi.context.resources.getDrawable(R.drawable.ic_check_black_24dp)
             btnLokasi.setText("Lokasi Telah dipilih")
             btnLokasi.setCompoundDrawables(img,null,null,null)
+
+            var alamatLokasi = getCompleteAddress(lat,lon)
+            edAlamat.setText(alamatLokasi)
         }
+    }
+
+    fun getCompleteAddress(latitude : Double,longitude : Double) : String{
+        val geocoder: Geocoder
+        val addresses: List<Address>
+        geocoder = Geocoder(this, Locale.getDefault())
+
+        addresses = geocoder.getFromLocation(
+            latitude,
+            longitude,
+            1
+        ) // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+
+        val address: String = addresses[0]
+            .getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+
+        val city: String = addresses[0].getLocality()
+        val state: String = addresses[0].getAdminArea()
+        val country: String = addresses[0].getCountryName()
+        val postalCode: String = addresses[0].getPostalCode()
+        val knownName: String =
+            addresses[0].getFeatureName() // Only if available else return NULL
+
+        return address
     }
 }
