@@ -4,22 +4,15 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.location.*
+import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.akexorcist.googledirection.GoogleDirection
-import com.akexorcist.googledirection.constant.TransportMode
-import com.akexorcist.googledirection.model.Direction
-import com.akexorcist.googledirection.model.Info
-import com.akexorcist.googledirection.model.Step
 import com.akexorcist.googledirection.util.DirectionConverter
-import com.akexorcist.googledirection.util.execute
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -29,9 +22,17 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.tapisdev.cateringtenda.base.BaseActivity
 import com.tapisdev.mysteam.R
+import com.tapisdev.mysteam.model.GraphNode
+import com.tapisdev.mysteam.model.SharedVariable
 import com.tapisdev.mysteam.model.Steam
+import com.tapisdev.mysteam.util.Get_koordinat_awal_akhir
 import com.tapisdev.mysteam.util.PermissionHelper
+import com.tapisdev.mysteam.util.dijkstra
 import kotlinx.android.synthetic.main.activity_lokasi_steam.*
+import org.json.JSONObject
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class LokasiSteamActivity : BaseActivity(), OnMapReadyCallback,PermissionHelper.PermissionListener,LocationListener {
 
@@ -40,6 +41,9 @@ class LokasiSteamActivity : BaseActivity(), OnMapReadyCallback,PermissionHelper.
     lateinit var lm : LocationManager
     lateinit var steam : Steam
     lateinit var  permissionHelper : PermissionHelper
+    val ruteList = ArrayList<LatLng>()
+
+    lateinit var dijkstra : dijkstra
 
     var lat  = 0.0
     var lon  = 0.0
@@ -56,6 +60,12 @@ class LokasiSteamActivity : BaseActivity(), OnMapReadyCallback,PermissionHelper.
         lm = (getSystemService(LOCATION_SERVICE) as LocationManager?)!!
         permissionHelper = PermissionHelper(this)
         permissionHelper.setPermissionListener(this)
+        dijkstra = dijkstra(this)
+
+        //declare Uniq ID for Route, sebagai acuan ketika ambil di database nanti
+        var uniqueID = UUID.randomUUID().toString()
+        SharedVariable.uniqJalurID = uniqueID
+        SharedVariable.graphNodeStatus = false
 
 
         i = intent
@@ -65,52 +75,26 @@ class LokasiSteamActivity : BaseActivity(), OnMapReadyCallback,PermissionHelper.
 
         rlRute.setOnClickListener {
             if (myLat != 0.0){
+                getGraphNode(LatLng(myLat,myLon), LatLng(lat,lon))
                 showLoading(this)
-                GoogleDirection.withServerKey("AIzaSyBYR_9WSimaGMFhwRyTSy25DKPrSnl97uc")
-                    .from(LatLng(myLat, myLon))
-                    .to(LatLng(lat,lon))
-                    .transportMode(TransportMode.DRIVING)
-                    .execute(
-                        onDirectionSuccess = { direction: Direction? ->
-                            dismissLoading()
-                            if(direction!!.isOK()) {
-                                // Do something
-                                //showSuccessMessage("direction berhasil")
-                                //megmabil data direction dari API
-                                val route  = direction.routeList.get(0)
-                                val leg  = route.legList.get(0)
-                                var listStep : List<Step>
-                                listStep = leg.stepList
-                                var pointList : ArrayList<LatLng>
-                                pointList = leg.directionPoint
 
-                                //mengetahui jarak dan durasi perjalanan
-                                var distanceInfo : Info
-                                var durationInfo : Info
-                                distanceInfo = leg.distance
-                                durationInfo = leg.duration
-                                tvJarak.setText(""+distanceInfo.text+" , dalam "+durationInfo.text)
+                //eksekusi algo dijkstra
+                // GET COORDINATE AWAL DI SEKITAR SIMPUL
 
-                                //memulai menggambar rute di maps
-                                var directionPositionList : ArrayList<LatLng>
-                                directionPositionList = leg.directionPoint
+                ruteList.clear()
+                val start_coordinate_jalur = Get_koordinat_awal_akhir()
+                dijkstra.startDijkstra(start_coordinate_jalur,myLat,myLon,"awal")
 
-                                var polylineOptions : PolylineOptions
-                                polylineOptions = DirectionConverter.createPolyline(this,directionPositionList,6,
-                                    Color.GREEN)
-                                mMap.addPolyline(polylineOptions)
-
-                            } else {
-                                // Do something
-                                showErrorMessage("rute tidak data ditemukan")
-                            }
-                        },
-                        onDirectionFailure = { t: Throwable ->
-                            // Do something
-                            dismissLoading()
-                            showErrorMessage("gagal membuat rute, coba lagi nanti")
-                        }
-                    )
+                object : CountDownTimer(10000, 1000) {
+                    override fun onTick(millisUntilFinished: Long) {
+                       if (SharedVariable.graphNodeStatus == true){
+                           drawJalurDijkstra()
+                           SharedVariable.graphNodeStatus = false
+                       }
+                    }
+                    override fun onFinish() {
+                    }
+                }.start()
 
             }else{
                 showInfoMessage("lokasi anda tidak dapat ditemukan, mohon aktifkan GPS anda")
@@ -137,6 +121,57 @@ class LokasiSteamActivity : BaseActivity(), OnMapReadyCallback,PermissionHelper.
             }
         }
         showSweetInfo("Untuk akurasi yang lebih baik, harap aktifkan GPS Anda")
+    }
+
+
+    fun drawJalurDijkstra(){
+
+        graphNodeRef.document(SharedVariable.uniqJalurID).get().addOnCompleteListener {
+            task ->
+            dismissLoading()
+            if (task.isSuccessful){
+                var documentSnapshot = task.result
+                if (documentSnapshot!!.exists()){
+                    val graphNode = documentSnapshot?.toObject(GraphNode::class.java)
+                    tvJarak.setText(graphNode?.bobot+" KM")
+                    Log.d("draw : ",""+graphNode.toString())
+                    Log.d("draw : ","unik id "+SharedVariable.uniqJalurID)
+
+
+                    val jObject = JSONObject(graphNode?.nodes)
+                    val jArrCoordinates = jObject.getJSONArray("koordinat_node")
+
+                    Log.d("draw : ","length "+jArrCoordinates.length())
+
+                    for (i in 0 until  jArrCoordinates.length()){
+                        var koordinat = jArrCoordinates.get(i).toString()
+                        var arr = koordinat.split(",")
+                        var lokasi_koodinat = LatLng(arr[0].toDouble(),arr[1].toDouble())
+                        ruteList.add(lokasi_koodinat)
+                    }
+                  
+
+                    var polylineOptions : PolylineOptions
+                    polylineOptions = DirectionConverter.createPolyline(this,ruteList,6,
+                        Color.BLUE)
+                    mMap.addPolyline(polylineOptions)
+
+                }else{
+                    showErrorMessage("Jalur tidak ditemukan")
+                }
+            }else{
+                showErrorMessage("Jalur tidak ditemukan")
+            }
+        }
+
+        //memulai menggambar rute di maps
+       /* var ruteList : ArrayList<LatLng>
+        ruteList = leg.directionPoint
+
+        var polylineOptions : PolylineOptions
+        polylineOptions = DirectionConverter.createPolyline(this,ruteList,6,
+            Color.BLUE)
+        mMap.addPolyline(polylineOptions)*/
     }
 
     /**

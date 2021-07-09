@@ -2,16 +2,30 @@ package com.tapisdev.cateringtenda.base
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.akexorcist.googledirection.DirectionCallback
+import com.akexorcist.googledirection.GoogleDirection
+import com.akexorcist.googledirection.constant.TransportMode
+import com.akexorcist.googledirection.model.Direction
+import com.akexorcist.googledirection.model.Info
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.tapisdev.mysteam.activity.steam.LokasiSteamActivity
+import com.tapisdev.mysteam.model.GraphNode
+import com.tapisdev.mysteam.model.SharedVariable
+import com.tapisdev.mysteam.model.SharedVariable.Companion.uniqJalurID
 import com.tapisdev.mysteam.model.UserPreference
 import es.dmoral.toasty.Toasty
+import org.json.JSONArray
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 
 open class BaseActivity : AppCompatActivity() {
@@ -28,6 +42,7 @@ open class BaseActivity : AppCompatActivity() {
     val fasilitasRef = myDB.collection("fasilitas")
     val ratingRef = myDB.collection("rating")
     val bookingRef = myDB.collection("booking")
+    val graphNodeRef = myDB.collection("graph_node")
 
 
     override fun setContentView(view: View?) {
@@ -110,6 +125,68 @@ open class BaseActivity : AppCompatActivity() {
         if (auth.currentUser != null){
             currentUser = auth.currentUser!!
         }
+    }
+
+    fun getGraphNode(koordinatAwal : LatLng,koordinatAkhir : LatLng){
+        //mengambil node
+        GoogleDirection.withServerKey("AIzaSyBYR_9WSimaGMFhwRyTSy25DKPrSnl97uc")
+            .from(koordinatAwal)
+            .to(koordinatAkhir)
+            .transportMode(TransportMode.DRIVING)
+            .execute(object : DirectionCallback {
+                override fun onDirectionSuccess(direction: Direction?) {
+                    if (direction!!.isOK) {
+                        val route =
+                            direction.routeList[0]
+                        val leg = route.legList[0]
+                        val stepList =
+                            leg.stepList
+                        val nodeList: List<LatLng> = leg.directionPoint
+
+
+                        //ubah menjadi JSONArray
+                        val ja = JSONArray()
+                        for (i in 0 until nodeList.size) {
+                            val koordinat =
+                                "" + nodeList[i].latitude + "," + nodeList[i].longitude
+                            ja.put(koordinat)
+                        }
+                        val rootObject = JSONObject()
+                        rootObject.put("koordinat_node",ja)
+
+                        //simpan graph node nya
+                        var bobotInfo =
+                            Info()
+                        bobotInfo = leg.distance
+                        var bobot = bobotInfo.text
+                        bobot = bobot.dropLast(2)
+                        val graphNode = GraphNode(
+                            rootObject.toString(),
+                            uniqJalurID,
+                            bobot
+                        )
+                        graphNodeRef.document(SharedVariable.uniqJalurID).set(graphNode).addOnCompleteListener(
+                            OnCompleteListener<Void?> { task ->
+                                if (task.isSuccessful) {
+                                    SharedVariable.graphNodeStatus = true
+                                } else {
+                                    Log.d("djikstra", "Gagal mmenyimpan node ke DB")
+                                    Toasty.error(
+                                        applicationContext,
+                                        "Tidak dapat menemukan rute",
+                                        Toasty.LENGTH_SHORT
+                                    ).show()
+                                }
+                            })
+                    }
+                }
+
+                override fun onDirectionFailure(t: Throwable) {
+                    Log.d("djikstra", "Gagal mendapatkan graph ")
+                    Toasty.error(applicationContext, "Tidak dapat menemukan rute", Toasty.LENGTH_SHORT)
+                        .show()
+                }
+            })
     }
 
 

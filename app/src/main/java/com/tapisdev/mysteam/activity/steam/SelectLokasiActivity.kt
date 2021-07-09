@@ -19,6 +19,7 @@ import com.tapisdev.mysteam.R
 import com.tapisdev.mysteam.model.SharedVariable
 import com.tapisdev.mysteam.model.UserPreference
 import com.tapisdev.mysteam.util.PermissionHelper
+import com.tapisdev.mysteam.util.dijkstra
 import kotlinx.android.synthetic.main.activity_select_lokasi.*
 import java.util.ArrayList
 
@@ -26,6 +27,7 @@ class SelectLokasiActivity : BaseActivity(), OnMapReadyCallback,PermissionHelper
 
     private lateinit var mMap: GoogleMap
     lateinit var  permissionHelper : PermissionHelper
+
     var lat  = 0.0
     var lon  = 0.0
     lateinit var centerMapLatLon :LatLng
