@@ -60,7 +60,7 @@ public class dijkstra  {
         lokasiSteamActivity = new LokasiSteamActivity();
     }
 
-	public void jalurTerpendek(String[][] arg_graph, int simpulAwal, int simpulTujuan){
+	public void jalurTerpendek(int simpulAwal, int simpulTujuan){
 
 
 		System.out.println("sa : " + simpulAwal + " & st : " + simpulTujuan);
@@ -72,7 +72,7 @@ public class dijkstra  {
 		}
 
 
-		graph = arg_graph;
+		//graph = arg_graph;
         int simpul_awal = simpulAwal;
         int simpul_maju = simpulAwal;
         int simpul_tujuan = simpulTujuan;
@@ -427,6 +427,117 @@ public class dijkstra  {
                 __global_old_simpul_akhir = obj_tambah1.simpul_lama;
                 __global_simpul_akhir = obj_tambah1.simpul_baru; // misal 4
                 __global_graphArray = obj_tambah1.modif_graph; // graph[][]
+            }
+        }
+    }
+
+
+    public void getSimpulAwalAkhirJalur(Get_koordinat_awal_akhir objects, double latx, double lngx, String statusObject) throws JSONException{
+
+        // return JSON index posisi koordinat, nodes0, nodes1
+        JSONObject jStart = objects.Get_simpul(latx, lngx, myContext);
+
+        // index JSON
+        String status = jStart.getString("status");
+        int node_simpul_awal0 = jStart.getInt("node_simpul_awal0");
+        int node_simpul_awal1 = jStart.getInt("node_simpul_awal1");
+        int index_coordinate_json = jStart.getInt("index_coordinate_json");
+
+
+        int fix_simpul_awal = 0;
+
+        // jika koordinat tepat di atas posisi simpul/node
+        // maka tidak perlu menambahkan simpul baru
+        if(status.equals("jalur_none")){
+
+            //tentukan simpul awal atau akhir yg dekat dgn posisi user
+            if(index_coordinate_json == 0){ // awal			
+                fix_simpul_awal = node_simpul_awal0;
+            }else{ // akhir				
+                fix_simpul_awal = node_simpul_awal1;
+            }
+
+            if(statusObject == "awal"){
+
+                // return
+                __global_old_simpul_awal = node_simpul_awal0 + "-" + node_simpul_awal1;
+                __global_simpul_awal = fix_simpul_awal; // misal 0				
+            }else{
+
+                // return
+                __global_old_simpul_akhir = node_simpul_awal0 + "-" + node_simpul_awal1;
+                __global_simpul_akhir = fix_simpul_awal; // misal 0				
+            }
+
+
+        }
+        // jika koordinat berada diantara simpul 5 dan simpul 4 atau simpul 4 dan simpul 5
+        // maka perlu menambahkan simpul baru
+        else if(status.equals("jalur_double")){
+
+            // return		
+            if(statusObject == "awal"){
+
+                // cari simpul (5,4) dan (4-5) di Tambah_simpul.java
+                Tambah_simpul obj_tambah = new Tambah_simpul();
+                obj_tambah.dobelSimpul(node_simpul_awal0, node_simpul_awal1, index_coordinate_json,
+                        myContext, __global_graphArray, 401
+                ); // 401 : row id yg baru
+
+
+                // return
+                __global_old_simpul_awal = obj_tambah.simpul_lama;
+                __global_simpul_awal = obj_tambah.simpul_baru; // misal 6
+                __global_graphArray = obj_tambah.modif_graph; // graph[][]
+
+            }else{
+
+                // cari simpul (5,4) dan (4-5) di Tambah_simpul.java
+                Tambah_simpul obj_tambah = new Tambah_simpul();
+                obj_tambah.dobelSimpul(node_simpul_awal0, node_simpul_awal1, index_coordinate_json,
+                        myContext, __global_graphArray, 501
+                ); // 501 : row id yg baru
+
+
+                // return
+                __global_old_simpul_akhir = obj_tambah.simpul_lama;
+                __global_simpul_akhir = obj_tambah.simpul_baru; // misal 4			
+                __global_graphArray = obj_tambah.modif_graph; // graph[][]
+
+            }
+
+        }
+        // jika koordinat hanya berada diantara simpul 5 dan simpul 4
+        // maka perlu menambahkan simpul baru
+        else if(status.equals("jalur_single")){
+
+            if(statusObject == "awal"){
+
+                // cari simpul (5,4) di Tambah_simpul.java
+                Tambah_simpul obj_tambah1 = new Tambah_simpul();
+                obj_tambah1.singleSimpul(node_simpul_awal0, node_simpul_awal1, index_coordinate_json,
+                        myContext, __global_graphArray, 401
+                ); // 401 : row id yg baru
+
+
+                // return
+                __global_old_simpul_awal = obj_tambah1.simpul_lama;
+                __global_simpul_awal = obj_tambah1.simpul_baru; // misal 6
+                __global_graphArray = obj_tambah1.modif_graph; // graph[][]
+
+            }else{
+
+                // cari simpul (5,4) di Tambah_simpul.java
+                Tambah_simpul obj_tambah1 = new Tambah_simpul();
+                obj_tambah1.singleSimpul(node_simpul_awal0, node_simpul_awal1, index_coordinate_json,
+                        myContext, __global_graphArray, 501
+                ); // 501 : row id yg baru
+
+
+                // return
+                __global_old_simpul_akhir = obj_tambah1.simpul_lama;
+                __global_simpul_akhir = obj_tambah1.simpul_baru; // misal 4			
+                __global_graphArray = obj_tambah1.modif_graph; // graph[][]	
             }
         }
     }

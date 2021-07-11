@@ -44,6 +44,8 @@ class LokasiSteamActivity : BaseActivity(), OnMapReadyCallback,PermissionHelper.
     val ruteList = ArrayList<LatLng>()
 
     lateinit var dijkstra : dijkstra
+    var __global_simpul_awal = 0
+    var __global_simpul_akhir = 0
 
     var lat  = 0.0
     var lon  = 0.0
@@ -79,11 +81,17 @@ class LokasiSteamActivity : BaseActivity(), OnMapReadyCallback,PermissionHelper.
                 showLoading(this)
 
                 //eksekusi algo dijkstra
-                // GET COORDINATE AWAL DI SEKITAR SIMPUL
+
+                val start_coordinate_jalur = Get_koordinat_awal_akhir()
+                dijkstra.getSimpulAwalAkhirJalur(start_coordinate_jalur, myLat, myLon, "awal")
+
+                val destination_coordinate_jalur = Get_koordinat_awal_akhir()
+                dijkstra.getSimpulAwalAkhirJalur(
+                    destination_coordinate_jalur, lat, lon, "akhir"
+                )
 
                 ruteList.clear()
-                val start_coordinate_jalur = Get_koordinat_awal_akhir()
-                dijkstra.startDijkstra(start_coordinate_jalur,myLat,myLon,"awal")
+                dijkstra.jalurTerpendek(__global_simpul_awal,__global_simpul_akhir)
 
                 object : CountDownTimer(10000, 1000) {
                     override fun onTick(millisUntilFinished: Long) {
@@ -149,7 +157,7 @@ class LokasiSteamActivity : BaseActivity(), OnMapReadyCallback,PermissionHelper.
                         var lokasi_koodinat = LatLng(arr[0].toDouble(),arr[1].toDouble())
                         ruteList.add(lokasi_koodinat)
                     }
-                  
+
 
                     var polylineOptions : PolylineOptions
                     polylineOptions = DirectionConverter.createPolyline(this,ruteList,6,
@@ -207,7 +215,7 @@ class LokasiSteamActivity : BaseActivity(), OnMapReadyCallback,PermissionHelper.
         permissionHelper.checkAndRequestPermissions(listPermissions)
     }
 
-    //define the listener
+    //define the listener and get user location
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             //thetext.text = ("" + location.longitude + ":" + location.latitude)
